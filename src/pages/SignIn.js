@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 import SignInPhoto from "../assets/signinpicture.jpg";
 import OAuth from "../components/OAuth";
@@ -12,11 +15,26 @@ function SignIn() {
     password: "",
   });
   const { email, password } = formData;
+  const navigate = useNavigate();
   function onChange(e) {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
+  }
+  async function onSubmit(e) {
+    // default for forms in on submit but not for buttons in on click functionality
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+      const { user } = userCredentials;
+      if (user) {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("Bad user crendentials");
+    }
   }
   return (
     <section>
@@ -26,7 +44,7 @@ function SignIn() {
           <img className="w-full rounded-2xl" src={SignInPhoto} alt="Landslet sign in" />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               className="mb-6 w-full  px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
               type="email"
