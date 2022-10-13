@@ -149,7 +149,7 @@ function CreateListing() {
     const imgUrls = await Promise.all([...images].map((image) => storeImage(image))).catch(
       (error) => {
         setLoading(false);
-        toast.error("Images not uploaded");
+        toast.error("Images not uploaded, the size must not be more than 2mb");
         console.log("we are in the imgUrls funciton");
         return;
       }
@@ -161,6 +161,7 @@ function CreateListing() {
       imgUrls,
       geolocation,
       timeStamp: serverTimestamp(),
+      userRef: auth.currentUser.uid,
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
