@@ -1,7 +1,7 @@
 import React from "react";
 
 function Offers() {
-  return <div>Offers</div>;
+  return <div>Offerss</div>;
 }
 
 export default Offers;
