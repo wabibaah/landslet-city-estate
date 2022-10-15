@@ -6,15 +6,19 @@ import { FaShare, FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair } from "reac
 import "swiper/css/bundle";
 
 import { doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
+import Contact from "../components/Contact";
 
 function Listing() {
   const params = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [contactLandLord, setContactLandLord] = useState(false);
+  const auth = getAuth();
   const listingId = params.listingId;
 
   SwiperCore.use([Autoplay, Navigation, Pagination]);
@@ -100,7 +104,7 @@ function Listing() {
           <p className="mt-3 mb-3">
             <span className="font-semibold">Description</span> - {listing.description}
           </p>
-          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold">
+          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold mb-6">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="text-lg mr-1" />
               {+listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "1 Bed"}
@@ -118,6 +122,17 @@ function Listing() {
               {listing.furnished ? "Furnished" : "Not furnished"}
             </li>
           </ul>
+          {listing.userRef !== auth.currentUser?.uid && !contactLandLord && (
+            <div className="mt-6">
+              <button
+                onClick={() => setContactLandLord(true)}
+                className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out"
+              >
+                Contact Landlord
+              </button>
+            </div>
+          )}
+          {contactLandLord && <Contact userRef={listing.userRef} listing={listing} />}
         </div>
         <div className="bg-blue-600 w-full h-[200px] lg:h-[400px] z-10 overflow-x-hidden"> </div>
       </div>
