@@ -64,7 +64,7 @@ function Home() {
           });
         });
         setRentListings(rentListings);
-        console.log(rentListings);
+        // console.log(rentListings);
       } catch (error) {
         console.log(error);
       }
@@ -95,7 +95,7 @@ function Home() {
           });
         });
         setSaleListings(saleListings);
-        console.log(saleListings);
+        // console.log(saleListings);
       } catch (error) {
         console.log(error);
       }
